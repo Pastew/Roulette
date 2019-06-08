@@ -45,7 +45,7 @@ namespace Tests
             BetsHolder betsHolder = new BetsHolder();
             betsHolder.AddPlayerBet(BetDef.BetType.Red, chips);
 
-            List<int> redNumbers = BetDef.numbers[BetDef.BetType.Red].ToList();
+            List<int> redNumbers = BetDef.betFixedNumbers[BetDef.BetType.Red].ToList();
 
             foreach (int winningNumber in redNumbers)
             {
@@ -65,7 +65,7 @@ namespace Tests
             betsHolder.AddPlayerBet(BetDef.BetType.Red, chips);
 
             List<int> allPossibleNumbers = GetAllPossibleValues();
-            List<int> redNumbers = BetDef.numbers[BetDef.BetType.Red].ToList();
+            List<int> redNumbers = BetDef.betFixedNumbers[BetDef.BetType.Red].ToList();
 
             List<int> allNumbersWithoutRedNumbers = allPossibleNumbers.FindAll(number => !redNumbers.Contains(number));
 

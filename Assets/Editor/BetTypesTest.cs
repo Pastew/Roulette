@@ -9,39 +9,26 @@ namespace Tests
 {
     public class BetTypesTest
     {
-        private readonly int betCoins = 20;
+        private readonly int chips = 20;
 
         [Test]
-        public void RedBetTest()
+        public void RedBetConstructorTest()
         {
-            Bet bet = new Bet(BetDef.BetType.Red, betCoins);
+            Bet bet = new Bet(BetDef.BetType.Red, chips);
 
             List<int> actual = bet.Numbers;
-            List<int> expected = BetDef.numbers[BetDef.BetType.Red].ToList();
+            List<int> expected = new List<int>(){ 1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36 };
 
             Assert.IsTrue(expected.SequenceEqual(actual), "Expected: " + string.Join(",", expected) + ", actual: " + string.Join(",", actual));
         }
 
         [Test]
-        public void StraightBetTest()
+        public void ThirdDozenBetConstructorTest()
         {
-            int playerNumberChoose = 20;
-            Bet bet = new Bet(BetDef.BetType.Straight, betCoins, playerNumberChoose);
+            Bet bet = new Bet(BetDef.BetType.ThirdDozen, chips);
 
             List<int> actual = bet.Numbers;
-            List<int> expected = new List<int> { playerNumberChoose };
-
-            Assert.IsTrue(expected.SequenceEqual(actual), "Expected: " + string.Join(",", expected) + ", actual: " + string.Join(",", actual));
-        }
-
-        [Test]
-        public void SplitBetTest()
-        {
-            List<int> playerNumbersChoose = new List<int> { 17, 20};
-            Bet bet = new Bet(BetDef.BetType.Straight, betCoins, playerNumbersChoose.ToArray());
-
-            List<int> actual = bet.Numbers;
-            List<int> expected = playerNumbersChoose;
+            List<int> expected = new List<int>() { 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36 };
 
             Assert.IsTrue(expected.SequenceEqual(actual), "Expected: " + string.Join(",", expected) + ", actual: " + string.Join(",", actual));
         }

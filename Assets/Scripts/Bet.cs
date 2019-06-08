@@ -19,7 +19,14 @@ public class Bet : IEquatable<Bet>
         Numbers = numbers.ToList<int>();
 
         if (numbers.Length == 0)
-            Numbers = BetDef.numbers[betType].ToList<int>();
+            try
+            {
+                Numbers = BetDef.betFixedNumbers[betType].ToList<int>();
+            }
+            catch(KeyNotFoundException ex)
+            {
+                throw new KeyNotFoundException("You probably try to create inside bet without providing any number");
+            }
     }
 
     public bool Equals(Bet other)
