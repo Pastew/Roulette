@@ -6,12 +6,18 @@ using static BetDef;
 
 public class GameManager : MonoBehaviour
 {
+    public static GameManager instance;
+
+    private PlayerWallet playerWallet;
+
     private Roulette roulette;
-    private WinningNumberText winningNumberText;
-    private PlayerBetText playerBetText;
     private int winningNumber;
 
-    public static GameManager instance;
+    private PlayerBalanceText playerBalanceText;
+    private PlayerWinPanel playerWinPanel;
+    private PlayerLosePanel playerLosePanel;
+    private WinningNumberText winningNumberText;
+    private PlayerBetText playerBetText;
 
     private void Awake()
     {
@@ -21,15 +27,15 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        playerWallet = FindObjectOfType<PlayerWallet>();
+
         winningNumberText = FindObjectOfType<WinningNumberText>();
         playerBetText = FindObjectOfType<PlayerBetText>();
-    }
+        playerBalanceText = FindObjectOfType<PlayerBalanceText>();
+        playerWinPanel = FindObjectOfType<PlayerWinPanel>();
+        playerLosePanel = FindObjectOfType<PlayerLosePanel>();
 
-    public void Play()
-    {
-        roulette.AddPlayerBet(BetType.Straight, 10, 4);
-        roulette.AddPlayerBet(BetType.Red, 25);
-        roulette.AddPlayerBet(BetType.Split, 50, 5, 8);
+        playerBalanceText.SetText(playerWallet.GetPlayerBalance().ToString());
     }
 
     public void AddBet(BetField betField, Chip chip)
@@ -41,7 +47,7 @@ public class GameManager : MonoBehaviour
 
     public void SpinButtonPressed()
     {
-        winningNumberText.SetText("");
+        winningNumberText.SetText("...");
         winningNumber = roulette.SpinResult();
         Invoke("SpinFinished", 3f); //TODO: Use something better than Invoke
     }
@@ -51,5 +57,16 @@ public class GameManager : MonoBehaviour
         winningNumberText.SetText(winningNumber.ToString());
         List<Bet> winningBets = roulette.GetWinningBets(winningNumber);        
         int playerWinAmount = roulette.CalculatePlayerWinningAmount(winningBets);
+
+
+        if (playerWinAmount > 0)
+        {
+            playerWinPanel.SetText(playerWinAmount.ToString());
+            playerWinPanel.GetComponent<Animator>().SetTrigger("show");
+        }
+        else
+        {
+            playerLosePanel.GetComponent<Animator>().SetTrigger("show");
+        }
     }
 }
