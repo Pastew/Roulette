@@ -6,6 +6,9 @@ using UnityEngine;
 
 public class Hand : MonoBehaviour
 {
+    [Tooltip("Offset from finger to chip. To make it more visible where you're placing chip.")]
+    public Vector3 offset;
+
     private GameObject heldChip;
     private BetField closestBetField;
 
@@ -18,27 +21,36 @@ public class Hand : MonoBehaviour
 
     void Update()
     {
-        Vector3 newPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        newPos.z = 0;
-        transform.position = newPos;
-
         if(heldChip != null)
         {
-            BetField newClosestBetField = FindClosestBetField();
-            print(newClosestBetField.name);
-            if (newClosestBetField != closestBetField)
-            {
-                if(closestBetField != null)
-                    closestBetField.TurnLights(false);
-
-                closestBetField = newClosestBetField;
-                closestBetField.TurnLights(true);
-            }
+            UpdateHeldChipPosition();
+            LightUpClosestBetField();
         }
 
         if (Input.GetMouseButtonUp(0) && heldChip != null)
         {
             PlaceChip();
+        }
+    }
+
+    private void UpdateHeldChipPosition()
+    {
+        Vector3 newPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        newPos.z = 0;
+        heldChip.transform.position = newPos + offset;
+    }
+
+    private void LightUpClosestBetField()
+    {
+        BetField newClosestBetField = FindClosestBetField();
+
+        if (newClosestBetField != closestBetField)
+        {
+            if (closestBetField != null)
+                closestBetField.TurnLights(false);
+
+            closestBetField = newClosestBetField;
+            closestBetField.TurnLights(true);
         }
     }
 
@@ -49,7 +61,7 @@ public class Hand : MonoBehaviour
 
         foreach (BetField betField in betFields)
         {
-            float distance = Vector2.Distance(betField.transform.position, transform.position);
+            float distance = Vector2.Distance(betField.transform.position, heldChip.transform.position);
             if (distance < minDistance)
             {
                 minDistance = distance;
@@ -61,7 +73,8 @@ public class Hand : MonoBehaviour
 
     private void PlaceChip()
     {
-        heldChip.transform.parent = null;
+        closestBetField.PlaceChip(heldChip.GetComponent<Chip>());
+        heldChip = null;
     }
 
     public void SpawnChip(GameObject chipPreset)
