@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using static BetDef;
 
-public class GameManager : MonoBehaviour
+public class Roulette
 {
     private BetsHolder betsHolder;
     private IWheel wheel;
