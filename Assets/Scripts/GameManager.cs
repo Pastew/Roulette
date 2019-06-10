@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour
     private PlayerLosePanel playerLosePanel;
     private WinningNumberText winningNumberText;
     private PlayerBetText playerBetText;
+    private LastRewardText lastRewardText;
 
     private void Awake()
     {
@@ -34,6 +35,7 @@ public class GameManager : MonoBehaviour
         playerBalanceText = FindObjectOfType<PlayerBalanceText>();
         playerWinPanel = FindObjectOfType<PlayerWinPanel>();
         playerLosePanel = FindObjectOfType<PlayerLosePanel>();
+        lastRewardText = FindObjectOfType<LastRewardText>();
 
         playerBalanceText.SetText(playerWallet.GetPlayerBalance().ToString());
     }
@@ -57,7 +59,7 @@ public class GameManager : MonoBehaviour
         winningNumberText.SetText(winningNumber.ToString());
         List<Bet> winningBets = roulette.GetWinningBets(winningNumber);        
         int playerWinAmount = roulette.CalculatePlayerWinningAmount(winningBets);
-
+        lastRewardText.SetText(playerWinAmount.ToString());
 
         if (playerWinAmount > 0)
         {
