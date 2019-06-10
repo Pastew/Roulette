@@ -1,4 +1,4 @@
 ﻿public interface IWheel
 {
-    int Spin();
+    int SpinResult();
 }

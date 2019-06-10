@@ -7,7 +7,7 @@ using UnityEngine;
 public class Hand : MonoBehaviour
 {
     [Tooltip("Offset from finger to chip. To make it more visible where you're placing chip.")]
-    public Vector3 offset;
+    public Vector3 chipOffset;
 
     private GameObject heldChip;
     private BetField closestBetField;
@@ -37,7 +37,7 @@ public class Hand : MonoBehaviour
     {
         Vector3 newPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         newPos.z = 0;
-        heldChip.transform.position = newPos + offset;
+        heldChip.transform.position = newPos + chipOffset;
     }
 
     private void LightUpClosestBetField()

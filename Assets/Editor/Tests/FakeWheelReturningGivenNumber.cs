@@ -9,7 +9,7 @@
             this.alywasReturnedValue = alwaysReturnedValue;
         }
 
-        public int Spin()
+        public int SpinResult()
         {
             return alywasReturnedValue;
         }
