@@ -47,10 +47,10 @@ public class Hand : MonoBehaviour
         if (newClosestBetField != closestBetField)
         {
             if (closestBetField != null)
-                closestBetField.TurnLights(false);
+                closestBetField.TurnHighlightsForRelatedFields(false);
 
             closestBetField = newClosestBetField;
-            closestBetField.TurnLights(true);
+            closestBetField.TurnHighlightsForRelatedFields(true);
         }
     }
 

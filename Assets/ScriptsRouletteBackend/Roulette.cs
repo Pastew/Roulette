@@ -35,4 +35,9 @@ public class Roulette
     {
         return betsHolder.GetWinningBets(winningNumber);
     }
+
+    internal int GetCurrentRoundBet()
+    {
+        return betsHolder.GetTotalChips();
+    }
 }

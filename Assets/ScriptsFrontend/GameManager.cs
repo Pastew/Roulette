@@ -8,21 +8,21 @@ public class GameManager : MonoBehaviour
 {
     private Roulette roulette;
     private WinningNumberText winningNumberText;
+    private PlayerBetText playerBetText;
     private int winningNumber;
+
+    public static GameManager instance;
 
     private void Awake()
     {
+        instance = this;
         roulette = new Roulette();
     }
 
     void Start()
     {
         winningNumberText = FindObjectOfType<WinningNumberText>();
-    }
-
-    void Update()
-    {
-        
+        playerBetText = FindObjectOfType<PlayerBetText>();
     }
 
     public void Play()
@@ -32,13 +32,17 @@ public class GameManager : MonoBehaviour
         roulette.AddPlayerBet(BetType.Split, 50, 5, 8);
     }
 
+    public void AddBet(BetField betField, Chip chip)
+    {
+        roulette.AddPlayerBet(betField.betType, chip.value, betField.GetRelatedNumbers());
+        int currentRoundBet = roulette.GetCurrentRoundBet();
+        playerBetText.SetText(currentRoundBet.ToString());
+    }
+
     public void SpinButtonPressed()
     {
         winningNumberText.SetText("");
-
         winningNumber = roulette.SpinResult();
-        print("Spin result = " + winningNumber);
-
         Invoke("SpinFinished", 3f); //TODO: Use something better than Invoke
     }
 

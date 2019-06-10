@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class WinningNumberText : MonoBehaviour
+public class UIText : MonoBehaviour
 {
-    private Text text;
+    protected Text text;
 
     private void Awake()
     {
@@ -15,7 +14,6 @@ public class WinningNumberText : MonoBehaviour
 
     public void SetText(string newText)
     {
-        text.text = newText.ToString();
-
+        text.text = newText;
     }
 }

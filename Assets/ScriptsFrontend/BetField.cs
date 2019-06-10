@@ -2,30 +2,24 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class BetField : MonoBehaviour
 {
     public BetDef.BetType betType;
+    public int number;
     public List<BetField> relatedFields;
 
     private GameObject light;
-
-    //private List<Chip> chipsOnThisField;
-
 
     private void Awake()
     {
         light = transform.Find("Light").gameObject; // TODO: Modify to find light GO in a better way.
     }
 
-    void Start()
+    internal int[] GetRelatedNumbers()
     {
-        
-    }
-
-    void Update()
-    {
-        
+        return relatedFields.Select(field => field.number).ToArray<int>();
     }
 
     // Placing chips
@@ -33,20 +27,20 @@ public class BetField : MonoBehaviour
     {
         chip.transform.parent = transform;
         chip.transform.localPosition = Vector3.zero;
+        GameManager.instance.AddBet(this, chip);
     }
 
-    // Lights
-    public void TurnLights(bool turnedOn)
+    // Highlights
+    public void TurnHighlightsForRelatedFields(bool turnedOn)
     {
         foreach(BetField field in relatedFields)
         {
-            field.TurnLight(turnedOn);
+            field.TurnHighlight(turnedOn);
         }
     }
 
-    private void TurnLight(bool turnedOn)
+    private void TurnHighlight(bool turnedOn)
     {
         light.gameObject.SetActive(turnedOn);
     }
-
 }

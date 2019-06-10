@@ -37,4 +37,8 @@ public class BetsHolder
         return PlayerBets.FindAll(bet => bet.Numbers.Contains(winningNumber));
     }
 
+    internal int GetTotalChips()
+    {
+        return playerBets.Sum(el => el.Chips);
+    }
 }
