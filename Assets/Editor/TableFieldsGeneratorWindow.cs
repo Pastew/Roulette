@@ -37,6 +37,7 @@ public class TableFieldsGeneratorWindow : EditorWindow
         Vector3 rootPosition = table.transform.Find("Root").transform.position;
 
         GenerateStraights(rootPosition);
+        GenerateSplits(rootPosition);
     }
 
     private void GenerateStraights(Vector3 rootPosition)
@@ -51,9 +52,9 @@ public class TableFieldsGeneratorWindow : EditorWindow
         {
             for (int row = 0; row < 3; row++)
             {
-                float betPosX = rootPosition.x + straightsOffset.x * column;
-                float betPosY = rootPosition.y + straightsOffset.y * row;
-                Vector3 betPosition = new Vector3(betPosX, betPosY, 0);
+                float fieldPosX = rootPosition.x + straightsOffset.x * column;
+                float fieldPosY = rootPosition.y + straightsOffset.y * row;
+                Vector3 betPosition = new Vector3(fieldPosX, fieldPosY, 0);
 
                 GameObject betFieldGO = Instantiate(betFieldPrefab, straightsContainer.transform) as GameObject;
                 betFieldGO.name = "Straight_" + number;
@@ -68,10 +69,50 @@ public class TableFieldsGeneratorWindow : EditorWindow
         }
     }
 
+    private void GenerateSplits(Vector3 rootPosition)
+    {
+        GameObject table = GameObject.Find("Table");
+        GameObject splitsContainer = new GameObject("Splits");
+        splitsContainer.transform.parent = table.transform;
+
+        int number = 1;
+
+        // Horizontal lines splits
+        for (int column = 0; column < 12; column++)
+        {
+            for (int row = 0; row < 2; row++)
+            {
+                float fieldPosX = rootPosition.x + straightsOffset.x * column;
+                float fieldPosY = rootPosition.y + straightsOffset.y / 2 + straightsOffset.y * row;
+                Vector3 betPosition = new Vector3(fieldPosX, fieldPosY, 0);
+
+                GameObject betFieldGO = Instantiate(betFieldPrefab, splitsContainer.transform) as GameObject;
+                betFieldGO.name = String.Format("Split_{0},{1}", number, number + 1);
+                betFieldGO.transform.position = betPosition;
+
+                BetField betField = betFieldGO.GetComponent<BetField>();
+                betField.number = -1;
+                betField.betType = BetDef.BetType.Split;
+                betField.relatedFields = new List<BetField>();
+                betField.relatedFields.Add(GameObject.Find("Straight_" + number).GetComponent<BetField>());
+                betField.relatedFields.Add(GameObject.Find("Straight_" + (number+1)).GetComponent<BetField>());
+
+                number++;
+            }
+            number++;
+        }
+    }
+
     private static void RemoveAllBetFields()
     {
-        List<GameObject> betFields = new List<GameObject>();
-        foreach (BetField betField in FindObjectsOfType<BetField>()) betFields.Add(betField.gameObject);
-        betFields.ForEach(child => DestroyImmediate(child));
+        foreach (string gameObjectName in new string[] { "Straights", "Splits" })
+        {
+            Transform transformToDestroy = GameObject.Find("Table").transform.Find(gameObjectName);
+            if (transformToDestroy != null)
+                DestroyImmediate(transformToDestroy.gameObject);
+        }
+        //List<GameObject> betFields = new List<GameObject>();
+        //foreach (BetField betField in FindObjectsOfType<BetField>()) betFields.Add(betField.gameObject);
+        //betFields.ForEach(child => DestroyImmediate(child));
     }
 }
