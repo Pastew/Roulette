@@ -38,6 +38,7 @@ public class TableFieldsGeneratorWindow : EditorWindow
 
         GenerateStraights(rootPosition);
         GenerateSplits(rootPosition);
+        GenerateCorners(rootPosition);
     }
 
     private void GenerateStraights(Vector3 rootPosition)
@@ -124,6 +125,7 @@ public class TableFieldsGeneratorWindow : EditorWindow
                 BetField betField = betFieldGO.GetComponent<BetField>();
                 betField.number = -1;
                 betField.betType = BetDef.BetType.Split;
+
                 betField.relatedFields = new List<BetField>();
                 betField.relatedFields.Add(GameObject.Find("Straight_" + number).GetComponent<BetField>());
                 betField.relatedFields.Add(GameObject.Find("Straight_" + (number + 3)).GetComponent<BetField>());
@@ -133,9 +135,46 @@ public class TableFieldsGeneratorWindow : EditorWindow
         }
     }
 
+    private void GenerateCorners(Vector3 rootPosition)
+    {
+        GameObject table = GameObject.Find("Table");
+
+        GameObject cornersContainer = new GameObject("Corners");
+        cornersContainer.transform.parent = table.transform;
+
+        int number = 1;
+
+        for (int column = 0; column < 11; column++)
+        {
+            for (int row = 0; row < 2; row++)
+            {
+                float fieldPosX = rootPosition.x + straightsOffset.x / 2 + straightsOffset.x * column;
+                float fieldPosY = rootPosition.y + straightsOffset.y / 2 + straightsOffset.y * row;
+                Vector3 betPosition = new Vector3(fieldPosX, fieldPosY, 0);
+
+                GameObject betFieldGO = Instantiate(betFieldPrefab, cornersContainer.transform) as GameObject;
+                betFieldGO.name = String.Format("Corner_{0},{1},{2},{3}", number, number + 1, number + 3, number + 4);
+                betFieldGO.transform.position = betPosition;
+
+                BetField betField = betFieldGO.GetComponent<BetField>();
+                betField.number = -1;
+                betField.betType = BetDef.BetType.Corner;
+
+                betField.relatedFields = new List<BetField>();
+                betField.relatedFields.Add(GameObject.Find("Straight_" + number).GetComponent<BetField>());
+                betField.relatedFields.Add(GameObject.Find("Straight_" + (number + 1)).GetComponent<BetField>());
+                betField.relatedFields.Add(GameObject.Find("Straight_" + (number + 3)).GetComponent<BetField>());
+                betField.relatedFields.Add(GameObject.Find("Straight_" + (number + 4)).GetComponent<BetField>());
+
+                number++;
+            }
+            number++;
+        }
+    }
+
     private static void RemoveAllBetFields()
     {
-        foreach (string gameObjectName in new string[] { "Straights", "HorizontalSplits", "VerticalSplits" })
+        foreach (string gameObjectName in new string[] { "Straights", "HorizontalSplits", "VerticalSplits", "Corner"})
         {
             Transform transformToDestroy = GameObject.Find("Table").transform.Find(gameObjectName);
             if (transformToDestroy != null)
