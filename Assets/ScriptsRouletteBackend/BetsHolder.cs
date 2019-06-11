@@ -41,4 +41,9 @@ public class BetsHolder
     {
         return playerBets.Sum(el => el.Chips);
     }
+
+    internal void RemoveAllBets()
+    {
+        playerBets.Clear();
+    }
 }

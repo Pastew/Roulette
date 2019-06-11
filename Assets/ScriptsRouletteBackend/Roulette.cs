@@ -41,4 +41,9 @@ public class Roulette
     {
         return betsHolder.GetTotalChips();
     }
+
+    internal void RemoveAllBets()
+    {
+        betsHolder.RemoveAllBets();
+    }
 }

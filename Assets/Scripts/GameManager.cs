@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
 using static BetDef;
 
 public class GameManager : MonoBehaviour
@@ -75,5 +76,14 @@ public class GameManager : MonoBehaviour
         {
             playerLosePanel.GetComponent<Animator>().SetTrigger("show");
         }
+        DestroyAllBets();
+    }
+
+    private void DestroyAllBets()
+    {
+        roulette.RemoveAllBets();
+        playerBetText.SetText("-");
+        foreach (Chip chip in FindObjectsOfType<Chip>())
+            Destroy(chip.gameObject);
     }
 }
