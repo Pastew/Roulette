@@ -39,7 +39,7 @@ public class BetField : MonoBehaviour
         }
     }
 
-    private void TurnHighlight(bool turnedOn)
+    public void TurnHighlight(bool turnedOn)
     {
         light.gameObject.SetActive(turnedOn);
     }

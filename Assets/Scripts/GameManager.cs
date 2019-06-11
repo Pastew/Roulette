@@ -56,7 +56,7 @@ public class GameManager : MonoBehaviour
     private void TurnOffAllHiglights()
     {
         foreach (BetField betField in FindObjectsOfType<BetField>())
-            betField.TurnHighlightsForRelatedFields(false);
+            betField.TurnHighlight(false);
     }
 
     public void SpinButtonPressed()
