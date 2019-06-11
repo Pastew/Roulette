@@ -49,6 +49,14 @@ public class GameManager : MonoBehaviour
         int currentRoundBet = roulette.GetCurrentRoundBet();
         playerBetText.SetText(currentRoundBet.ToString());
         playerBalanceText.SetText(playerWallet.PlayerBalance.ToString());
+
+        TurnOffAllHiglights();
+    }
+
+    private void TurnOffAllHiglights()
+    {
+        foreach (BetField betField in FindObjectsOfType<BetField>())
+            betField.TurnHighlightsForRelatedFields(false);
     }
 
     public void SpinButtonPressed()
