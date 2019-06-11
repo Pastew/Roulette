@@ -72,12 +72,13 @@ public class TableFieldsGeneratorWindow : EditorWindow
     private void GenerateSplits(Vector3 rootPosition)
     {
         GameObject table = GameObject.Find("Table");
-        GameObject splitsContainer = new GameObject("Splits");
+
+        // Horizontal lines splits
+        GameObject splitsContainer = new GameObject("HorizontalSplits");
         splitsContainer.transform.parent = table.transform;
 
         int number = 1;
 
-        // Horizontal lines splits
         for (int column = 0; column < 12; column++)
         {
             for (int row = 0; row < 2; row++)
@@ -101,11 +102,40 @@ public class TableFieldsGeneratorWindow : EditorWindow
             }
             number++;
         }
+
+
+        // Vertical lines splits
+        GameObject verticalSplitsContainer = new GameObject("VerticalSplits");
+        verticalSplitsContainer.transform.parent = table.transform;
+        number = 1;
+
+        for (int column = 0; column < 11; column++)
+        {
+            for (int row = 0; row < 3; row++)
+            {
+                float fieldPosX = rootPosition.x + straightsOffset.x/2 + straightsOffset.x * column;
+                float fieldPosY = rootPosition.y + straightsOffset.y * row;
+                Vector3 betPosition = new Vector3(fieldPosX, fieldPosY, 0);
+
+                GameObject betFieldGO = Instantiate(betFieldPrefab, verticalSplitsContainer.transform) as GameObject;
+                betFieldGO.name = String.Format("Split_{0},{1}", number, number + 3);
+                betFieldGO.transform.position = betPosition;
+
+                BetField betField = betFieldGO.GetComponent<BetField>();
+                betField.number = -1;
+                betField.betType = BetDef.BetType.Split;
+                betField.relatedFields = new List<BetField>();
+                betField.relatedFields.Add(GameObject.Find("Straight_" + number).GetComponent<BetField>());
+                betField.relatedFields.Add(GameObject.Find("Straight_" + (number + 3)).GetComponent<BetField>());
+
+                number++;
+            }
+        }
     }
 
     private static void RemoveAllBetFields()
     {
-        foreach (string gameObjectName in new string[] { "Straights", "Splits" })
+        foreach (string gameObjectName in new string[] { "Straights", "HorizontalSplits", "VerticalSplits" })
         {
             Transform transformToDestroy = GameObject.Find("Table").transform.Find(gameObjectName);
             if (transformToDestroy != null)
