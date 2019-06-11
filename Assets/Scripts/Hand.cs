@@ -30,7 +30,14 @@ public class Hand : MonoBehaviour
         if (Input.GetMouseButtonUp(0) && heldChip != null)
         {
             PlaceChip();
+            TurnOffAllHiglights();
         }
+    }
+
+    private void TurnOffAllHiglights()
+    {
+        foreach (BetField betField in FindObjectsOfType<BetField>())
+            betField.TurnHighlightsForRelatedFields(false);
     }
 
     private void UpdateHeldChipPosition()
