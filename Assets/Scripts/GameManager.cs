@@ -42,9 +42,12 @@ public class GameManager : MonoBehaviour
 
     public void AddBet(BetField betField, Chip chip)
     {
+        playerWallet.SubtractChips(chip.value);
+
         roulette.AddPlayerBet(betField.betType, chip.value, betField.GetRelatedNumbers());
         int currentRoundBet = roulette.GetCurrentRoundBet();
         playerBetText.SetText(currentRoundBet.ToString());
+        playerBalanceText.SetText(playerWallet.PlayerBalance.ToString());
     }
 
     public void SpinButtonPressed()
@@ -57,7 +60,7 @@ public class GameManager : MonoBehaviour
     private void SpinFinished()
     {
         winningNumberText.SetText(winningNumber.ToString());
-        List<Bet> winningBets = roulette.GetWinningBets(winningNumber);        
+        List<Bet> winningBets = roulette.GetWinningBets(winningNumber);
         int playerWinAmount = roulette.CalculatePlayerWinningAmount(winningBets);
         lastRewardText.SetText(playerWinAmount.ToString());
 
@@ -65,6 +68,8 @@ public class GameManager : MonoBehaviour
         {
             playerWinPanel.SetText(playerWinAmount.ToString());
             playerWinPanel.GetComponent<Animator>().SetTrigger("show");
+            playerWallet.AddChips(playerWinAmount);
+            playerBalanceText.SetText(playerWallet.PlayerBalance.ToString());
         }
         else
         {
