@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class PlayerWallet : MonoBehaviour
 {
-    private int playerBalance = 100;
+    private int playerBalance = 1000;
 
     public int PlayerBalance { get => playerBalance; private set => playerBalance = value; }
 
