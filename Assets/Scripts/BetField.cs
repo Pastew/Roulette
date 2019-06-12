@@ -6,6 +6,8 @@ using System.Linq;
 
 public class BetField : MonoBehaviour
 {
+    private Vector3 chipStackOffset = new Vector3(0.08f, 0.06f, -0.1f);
+
     public BetDef.BetType betType;
     public int number;
     public List<BetField> relatedFields;
@@ -25,8 +27,10 @@ public class BetField : MonoBehaviour
     // Placing chips
     public void PlaceChip(Chip chip)
     {
+        int chipsNumberAlreadyPlacedHere = transform.GetComponentsInChildren<Chip>().Length;
+
         chip.transform.parent = transform;
-        chip.transform.localPosition = Vector3.zero;
+        chip.transform.localPosition = Vector3.zero + chipStackOffset * chipsNumberAlreadyPlacedHere;
         GameManager.instance.AddBet(this, chip);
     }
 
