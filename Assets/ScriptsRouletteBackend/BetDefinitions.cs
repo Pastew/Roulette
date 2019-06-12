@@ -9,7 +9,6 @@ public static class BetDef
 {
     public enum BetType
     {
-        Zero,
         Straight,
         Split,
         Street,
@@ -33,7 +32,6 @@ public static class BetDef
     };
 
     public static Dictionary<BetType, int[]> betFixedNumbers = new Dictionary<BetType, int[]> {
-        {BetType.Zero, new int[]{0} }, 
         {BetType.FirstFour, new int[]{0, 1, 2, 3} }, 
         {BetType.Trio012, new int[]{0, 1, 2} }, 
         {BetType.Trio023, new int[]{0, 2, 3} }, 
@@ -61,7 +59,6 @@ public static class BetDef
 
     // https://www.roulettephysics.com/roulette-bets-odds-and-payouts/
     public static Dictionary<BetType, int> payout = new Dictionary<BetType, int> {
-        {BetType.Zero, 35}, 
         {BetType.Straight, 35}, 
         {BetType.Split, 17}, 
         {BetType.Street, 11}, 

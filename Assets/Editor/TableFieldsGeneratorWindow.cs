@@ -3,10 +3,28 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
+
+// This tool will generate  bet fields on table:
+// It will generate:
+// 1. Straights based on Root position. Root = game object in Table game object placed on Straight 1 field. 
+// Note: I won't generate Straight_0, you have to create it manually
+//
+// 2. Splits
+// 3. Corners
+//
+// 4. It will also create and fill BetField scripts for Fixed numbers bet fields (Even, Red, Odd, From1To18 etc...)
+// Note: It won't generate second FirstFour field, you have to create it manually
+//
+// To use it:
+// 1. Roulette tab (in Unity Editor) -> Roulette Table Field Generator
+// 2. Select BetField Prefab
+// 3. Click Generate
+//
+// Note: This code is not optimized, because it is used only once during development.
+// Note: This code is not pretty.
 public class TableFieldsGeneratorWindow : EditorWindow
 {
     Vector3 straightsOffset; // -1.01, -1.15 works OK.
-    Vector3 splitsOffset;
     UnityEngine.Object betFieldPrefab;
 
     [MenuItem("Roulette/Roulette Table Fields Generator")]
@@ -22,7 +40,6 @@ public class TableFieldsGeneratorWindow : EditorWindow
 
         GUILayout.Label("How to place bet fields on table", EditorStyles.boldLabel);
         straightsOffset = EditorGUILayout.Vector2Field("Straights offset", straightsOffset);
-        splitsOffset = EditorGUILayout.Vector2Field("Splits offset", Vector2.one / 2);
 
         if (GUILayout.Button("Generate"))
         {
@@ -39,6 +56,42 @@ public class TableFieldsGeneratorWindow : EditorWindow
         GenerateStraights(rootPosition);
         GenerateSplits(rootPosition);
         GenerateCorners(rootPosition);
+
+        foreach (BetDef.BetType betType in BetDef.betFixedNumbers.Keys)
+            GenerateFixedNumberBetFields(betType);
+    }
+
+    private void GenerateFixedNumberBetFields(BetDef.BetType betType)
+    {
+        GameObject table = GameObject.Find("Table");
+        Vector2 betFieldPosition = new Vector2();
+        try
+        {
+            betFieldPosition = table.transform.Find(betType.ToString()).gameObject.transform.position;
+        }
+        catch (NullReferenceException ex)
+        {
+            Debug.LogError("You need to create this BetField in Table: " + betType.ToString());
+        }
+
+        GameObject betFieldGO = Instantiate(betFieldPrefab, table.transform) as GameObject;
+        betFieldGO.transform.position = betFieldPosition;
+        betFieldGO.name = betType.ToString();
+        DestroyImmediate(table.transform.Find(betType.ToString()).gameObject);
+
+        foreach (BetField bf in betFieldGO.GetComponents<BetField>())
+            DestroyImmediate(bf);
+
+        BetField betField = betFieldGO.AddComponent<BetField>();
+        betField.number = -1;
+        betField.betType = betType;
+
+        betField.relatedFields = new List<BetField>();
+
+        foreach (int number in BetDef.betFixedNumbers[betType])
+        {
+            betField.relatedFields.Add(GameObject.Find("Straight_" + number).GetComponent<BetField>());
+        }
     }
 
     private void GenerateStraights(Vector3 rootPosition)
@@ -97,7 +150,7 @@ public class TableFieldsGeneratorWindow : EditorWindow
                 betField.betType = BetDef.BetType.Split;
                 betField.relatedFields = new List<BetField>();
                 betField.relatedFields.Add(GameObject.Find("Straight_" + number).GetComponent<BetField>());
-                betField.relatedFields.Add(GameObject.Find("Straight_" + (number+1)).GetComponent<BetField>());
+                betField.relatedFields.Add(GameObject.Find("Straight_" + (number + 1)).GetComponent<BetField>());
 
                 number++;
             }
@@ -114,7 +167,7 @@ public class TableFieldsGeneratorWindow : EditorWindow
         {
             for (int row = 0; row < 3; row++)
             {
-                float fieldPosX = rootPosition.x + straightsOffset.x/2 + straightsOffset.x * column;
+                float fieldPosX = rootPosition.x + straightsOffset.x / 2 + straightsOffset.x * column;
                 float fieldPosY = rootPosition.y + straightsOffset.y * row;
                 Vector3 betPosition = new Vector3(fieldPosX, fieldPosY, 0);
 
@@ -174,14 +227,11 @@ public class TableFieldsGeneratorWindow : EditorWindow
 
     private static void RemoveAllBetFields()
     {
-        foreach (string gameObjectName in new string[] { "Straights", "HorizontalSplits", "VerticalSplits", "Corner"})
+        foreach (string gameObjectName in new string[] { "Straights", "HorizontalSplits", "VerticalSplits", "Corners" })
         {
             Transform transformToDestroy = GameObject.Find("Table").transform.Find(gameObjectName);
             if (transformToDestroy != null)
                 DestroyImmediate(transformToDestroy.gameObject);
         }
-        //List<GameObject> betFields = new List<GameObject>();
-        //foreach (BetField betField in FindObjectsOfType<BetField>()) betFields.Add(betField.gameObject);
-        //betFields.ForEach(child => DestroyImmediate(child));
     }
 }
