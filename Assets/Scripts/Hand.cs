@@ -13,10 +13,12 @@ public class Hand : MonoBehaviour
     private BetField closestBetField;
 
     private List<BetField> betFields;
+    private PlayerWallet playerWallet;
 
     private void Start()
     {
         betFields = FindObjectsOfType<BetField>().ToList();
+        playerWallet = FindObjectOfType<PlayerWallet>();
     }
 
     void Update()
@@ -79,6 +81,7 @@ public class Hand : MonoBehaviour
 
     public void SpawnChip(GameObject chipPreset)
     {
-        heldChip = Instantiate(chipPreset, transform);
+        if(chipPreset.GetComponent<Chip>().value <= playerWallet.PlayerBalance)
+            heldChip = Instantiate(chipPreset, transform);
     }
 }
