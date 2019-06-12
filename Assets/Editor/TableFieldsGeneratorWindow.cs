@@ -24,7 +24,7 @@ using UnityEngine;
 // Note: This code is not pretty.
 public class TableFieldsGeneratorWindow : EditorWindow
 {
-    Vector3 straightsOffset; // -1.01, -1.15 works OK.
+    Vector3 offset = new Vector2(-1.01f, -1.15f); // -1.01, -1.15 works OK.
     UnityEngine.Object betFieldPrefab;
 
     [MenuItem("Roulette/Roulette Table Fields Generator")]
@@ -39,7 +39,7 @@ public class TableFieldsGeneratorWindow : EditorWindow
         betFieldPrefab = EditorGUILayout.ObjectField(betFieldPrefab, typeof(UnityEngine.Object), true);
 
         GUILayout.Label("How to place bet fields on table", EditorStyles.boldLabel);
-        straightsOffset = EditorGUILayout.Vector2Field("Straights offset", straightsOffset);
+        offset = EditorGUILayout.Vector2Field("Straights offset", offset);
 
         if (GUILayout.Button("Generate"))
         {
@@ -56,10 +56,13 @@ public class TableFieldsGeneratorWindow : EditorWindow
         GenerateStraights(rootPosition);
         GenerateSplits(rootPosition);
         GenerateCorners(rootPosition);
+        GenerateStreets(rootPosition);
+        //GenerateSixLines(rootPosition);
 
         foreach (BetDef.BetType betType in BetDef.betFixedNumbers.Keys)
             GenerateFixedNumberBetFields(betType);
     }
+
 
     private void GenerateFixedNumberBetFields(BetDef.BetType betType)
     {
@@ -106,8 +109,8 @@ public class TableFieldsGeneratorWindow : EditorWindow
         {
             for (int row = 0; row < 3; row++)
             {
-                float fieldPosX = rootPosition.x + straightsOffset.x * column;
-                float fieldPosY = rootPosition.y + straightsOffset.y * row;
+                float fieldPosX = rootPosition.x + offset.x * column;
+                float fieldPosY = rootPosition.y + offset.y * row;
                 Vector3 betPosition = new Vector3(fieldPosX, fieldPosY, 0);
 
                 GameObject betFieldGO = Instantiate(betFieldPrefab, straightsContainer.transform) as GameObject;
@@ -137,8 +140,8 @@ public class TableFieldsGeneratorWindow : EditorWindow
         {
             for (int row = 0; row < 2; row++)
             {
-                float fieldPosX = rootPosition.x + straightsOffset.x * column;
-                float fieldPosY = rootPosition.y + straightsOffset.y / 2 + straightsOffset.y * row;
+                float fieldPosX = rootPosition.x + offset.x * column;
+                float fieldPosY = rootPosition.y + offset.y / 2 + offset.y * row;
                 Vector3 betPosition = new Vector3(fieldPosX, fieldPosY, 0);
 
                 GameObject betFieldGO = Instantiate(betFieldPrefab, splitsContainer.transform) as GameObject;
@@ -167,8 +170,8 @@ public class TableFieldsGeneratorWindow : EditorWindow
         {
             for (int row = 0; row < 3; row++)
             {
-                float fieldPosX = rootPosition.x + straightsOffset.x / 2 + straightsOffset.x * column;
-                float fieldPosY = rootPosition.y + straightsOffset.y * row;
+                float fieldPosX = rootPosition.x + offset.x / 2 + offset.x * column;
+                float fieldPosY = rootPosition.y + offset.y * row;
                 Vector3 betPosition = new Vector3(fieldPosX, fieldPosY, 0);
 
                 GameObject betFieldGO = Instantiate(betFieldPrefab, verticalSplitsContainer.transform) as GameObject;
@@ -188,6 +191,39 @@ public class TableFieldsGeneratorWindow : EditorWindow
         }
     }
 
+    private void GenerateStreets(Vector3 rootPosition)
+    {
+        GameObject table = GameObject.Find("Table");
+
+        GameObject streetsContainer = new GameObject("Streets");
+        streetsContainer.transform.parent = table.transform;
+
+        int number = 1;
+
+        for (int column = 0; column < 12; column++)
+        {
+            float fieldPosX = rootPosition.x + offset.x * column;
+            float fieldPosY = rootPosition.y + offset.y / 2 + offset.y * 2;
+            Vector3 betPosition = new Vector3(fieldPosX, fieldPosY, 0);
+
+            GameObject betFieldGO = Instantiate(betFieldPrefab, streetsContainer.transform) as GameObject;
+            betFieldGO.name = String.Format("Street_{0},{1},{2}", number, number + 1, number + 2);
+            betFieldGO.transform.position = betPosition;
+
+            BetField betField = betFieldGO.GetComponent<BetField>();
+            betField.number = -1;
+            betField.betType = BetDef.BetType.Street;
+            betField.relatedFields = new List<BetField>();
+            betField.relatedFields.Add(GameObject.Find("Straight_" + number).GetComponent<BetField>());
+            betField.relatedFields.Add(GameObject.Find("Straight_" + (number + 1)).GetComponent<BetField>());
+            betField.relatedFields.Add(GameObject.Find("Straight_" + (number + 2)).GetComponent<BetField>());
+
+            number += 3;
+        }
+    }
+
+    
+
     private void GenerateCorners(Vector3 rootPosition)
     {
         GameObject table = GameObject.Find("Table");
@@ -201,8 +237,8 @@ public class TableFieldsGeneratorWindow : EditorWindow
         {
             for (int row = 0; row < 2; row++)
             {
-                float fieldPosX = rootPosition.x + straightsOffset.x / 2 + straightsOffset.x * column;
-                float fieldPosY = rootPosition.y + straightsOffset.y / 2 + straightsOffset.y * row;
+                float fieldPosX = rootPosition.x + offset.x / 2 + offset.x * column;
+                float fieldPosY = rootPosition.y + offset.y / 2 + offset.y * row;
                 Vector3 betPosition = new Vector3(fieldPosX, fieldPosY, 0);
 
                 GameObject betFieldGO = Instantiate(betFieldPrefab, cornersContainer.transform) as GameObject;
@@ -227,7 +263,7 @@ public class TableFieldsGeneratorWindow : EditorWindow
 
     private static void RemoveAllBetFields()
     {
-        foreach (string gameObjectName in new string[] { "Straights", "HorizontalSplits", "VerticalSplits", "Corners" })
+        foreach (string gameObjectName in new string[] { "Straights", "HorizontalSplits", "VerticalSplits", "Corners", "Streets" })
         {
             Transform transformToDestroy = GameObject.Find("Table").transform.Find(gameObjectName);
             if (transformToDestroy != null)
