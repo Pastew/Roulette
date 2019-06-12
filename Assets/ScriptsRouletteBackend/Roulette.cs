@@ -13,8 +13,8 @@ public class Roulette
     {
         winCalculator = new WinCalculator();
         betsHolder = new BetsHolder();
-        //wheel = new SimpleRandomWheel();
-        wheel = new FakeWheelReturningGivenNumber(2);
+        wheel = new SimpleRandomWheel();
+        //wheel = new FakeWheelReturningGivenNumber(2);
     }
 
     internal void AddPlayerBet(BetDef.BetType betType, int chips, params int[] numbers)
