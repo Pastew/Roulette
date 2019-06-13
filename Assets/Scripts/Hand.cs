@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class Hand : MonoBehaviour
 {
-    [Tooltip("Offset from finger to chip. To make it more visible where you're placing chip.")]
+    [Tooltip("Offset from finger to chip. It can be used to make it more visible where you're placing chip. Set to (0,0) if you want to show chip just below the finger.")]
     public Vector3 chipOffset;
 
     private GameObject heldChip;

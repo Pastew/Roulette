@@ -45,7 +45,7 @@ public class GameManager : MonoBehaviour
     {
         playerWallet.SubtractChips(chip.value);
 
-        roulette.AddPlayerBet(betField.betType, chip.value, betField.GetRelatedNumbers());
+        roulette.AddPlayerBet(betField.BetType, chip.value, betField.GetRelatedNumbers());
         int currentRoundBet = roulette.GetCurrentRoundBet();
         playerBetText.SetText(currentRoundBet.ToString());
         playerBalanceText.SetText(playerWallet.PlayerBalance.ToString());

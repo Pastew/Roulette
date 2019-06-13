@@ -8,23 +8,29 @@ public class BetField : MonoBehaviour
 {
     private Vector3 chipStackOffset = new Vector3(0.08f, 0.06f, -0.1f);
 
-    public BetDef.BetType betType;
-    public int number;
-    public List<BetField> relatedFields;
+    [SerializeField]
+    private BetDef.BetType betType;
+    [SerializeField]
+    private int number;
+    [SerializeField]
+    private List<BetField> relatedFields;
 
     private GameObject light;
 
+    public BetDef.BetType BetType { get => betType; set => betType = value; }
+    public int Number { get => number; set => number = value; }
+    public List<BetField> RelatedFields { get => relatedFields; set => relatedFields = value; }
+
     private void Awake()
     {
-        light = transform.Find("Light").gameObject; // TODO: Modify to find light GO in a better way.
+        light = transform.Find("Light").gameObject; // TODO: Optimize finding method.
     }
 
-    internal int[] GetRelatedNumbers()
+    public int[] GetRelatedNumbers()
     {
-        return relatedFields.Select(field => field.number).ToArray<int>();
+        return RelatedFields.Select(field => field.Number).ToArray<int>();
     }
 
-    // Placing chips
     public void PlaceChip(Chip chip)
     {
         int chipsNumberAlreadyPlacedHere = transform.GetComponentsInChildren<Chip>().Length;
@@ -37,7 +43,7 @@ public class BetField : MonoBehaviour
     // Highlights
     public void TurnHighlightsForRelatedFields(bool turnedOn)
     {
-        foreach(BetField field in relatedFields)
+        foreach(BetField field in RelatedFields)
         {
             field.TurnHighlight(turnedOn);
         }

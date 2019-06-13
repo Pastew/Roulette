@@ -21,7 +21,7 @@ using UnityEngine;
 // 3. Click Generate
 //
 // Note: This code is not optimized, because it is used only once during development.
-// Note: This code is not pretty.
+// Note: This code is not pretty, it needs to be refactored.
 public class TableFieldsGeneratorWindow : EditorWindow
 {
     Vector3 offset = new Vector2(-1.01f, -1.15f); // -1.01, -1.15 works OK.
@@ -86,14 +86,14 @@ public class TableFieldsGeneratorWindow : EditorWindow
             DestroyImmediate(bf);
 
         BetField betField = betFieldGO.AddComponent<BetField>();
-        betField.number = -1;
-        betField.betType = betType;
+        betField.Number = -1;
+        betField.BetType = betType;
 
-        betField.relatedFields = new List<BetField>();
+        betField.RelatedFields = new List<BetField>();
 
         foreach (int number in BetDef.betFixedNumbers[betType])
         {
-            betField.relatedFields.Add(GameObject.Find("Straight_" + number).GetComponent<BetField>());
+            betField.RelatedFields.Add(GameObject.Find("Straight_" + number).GetComponent<BetField>());
         }
     }
 
@@ -118,8 +118,8 @@ public class TableFieldsGeneratorWindow : EditorWindow
                 betFieldGO.transform.position = betPosition;
 
                 BetField betField = betFieldGO.GetComponent<BetField>();
-                betField.number = number;
-                betField.betType = BetDef.BetType.Straight;
+                betField.Number = number;
+                betField.BetType = BetDef.BetType.Straight;
 
                 number++;
             }
@@ -149,11 +149,11 @@ public class TableFieldsGeneratorWindow : EditorWindow
                 betFieldGO.transform.position = betPosition;
 
                 BetField betField = betFieldGO.GetComponent<BetField>();
-                betField.number = -1;
-                betField.betType = BetDef.BetType.Split;
-                betField.relatedFields = new List<BetField>();
-                betField.relatedFields.Add(GameObject.Find("Straight_" + number).GetComponent<BetField>());
-                betField.relatedFields.Add(GameObject.Find("Straight_" + (number + 1)).GetComponent<BetField>());
+                betField.Number = -1;
+                betField.BetType = BetDef.BetType.Split;
+                betField.RelatedFields = new List<BetField>();
+                betField.RelatedFields.Add(GameObject.Find("Straight_" + number).GetComponent<BetField>());
+                betField.RelatedFields.Add(GameObject.Find("Straight_" + (number + 1)).GetComponent<BetField>());
 
                 number++;
             }
@@ -179,12 +179,12 @@ public class TableFieldsGeneratorWindow : EditorWindow
                 betFieldGO.transform.position = betPosition;
 
                 BetField betField = betFieldGO.GetComponent<BetField>();
-                betField.number = -1;
-                betField.betType = BetDef.BetType.Split;
+                betField.Number = -1;
+                betField.BetType = BetDef.BetType.Split;
 
-                betField.relatedFields = new List<BetField>();
-                betField.relatedFields.Add(GameObject.Find("Straight_" + number).GetComponent<BetField>());
-                betField.relatedFields.Add(GameObject.Find("Straight_" + (number + 3)).GetComponent<BetField>());
+                betField.RelatedFields = new List<BetField>();
+                betField.RelatedFields.Add(GameObject.Find("Straight_" + number).GetComponent<BetField>());
+                betField.RelatedFields.Add(GameObject.Find("Straight_" + (number + 3)).GetComponent<BetField>());
 
                 number++;
             }
@@ -211,12 +211,12 @@ public class TableFieldsGeneratorWindow : EditorWindow
             betFieldGO.transform.position = betPosition;
 
             BetField betField = betFieldGO.GetComponent<BetField>();
-            betField.number = -1;
-            betField.betType = BetDef.BetType.Street;
+            betField.Number = -1;
+            betField.BetType = BetDef.BetType.Street;
 
-            betField.relatedFields = new List<BetField>();
+            betField.RelatedFields = new List<BetField>();
             for (int i = number; i <= number + 2; i++)
-                betField.relatedFields.Add(GameObject.Find("Straight_" + i).GetComponent<BetField>());
+                betField.RelatedFields.Add(GameObject.Find("Straight_" + i).GetComponent<BetField>());
 
             number += 3;
         }
@@ -242,12 +242,12 @@ public class TableFieldsGeneratorWindow : EditorWindow
             betFieldGO.transform.position = betPosition;
 
             BetField betField = betFieldGO.GetComponent<BetField>();
-            betField.number = -1;
-            betField.betType = BetDef.BetType.SixLine;
+            betField.Number = -1;
+            betField.BetType = BetDef.BetType.SixLine;
 
-            betField.relatedFields = new List<BetField>();
+            betField.RelatedFields = new List<BetField>();
             for (int i = number; i <= number + 5; i++)
-                betField.relatedFields.Add(GameObject.Find("Straight_" + i).GetComponent<BetField>());
+                betField.RelatedFields.Add(GameObject.Find("Straight_" + i).GetComponent<BetField>());
 
             number += 3;
         }
@@ -275,14 +275,14 @@ public class TableFieldsGeneratorWindow : EditorWindow
                 betFieldGO.transform.position = betPosition;
 
                 BetField betField = betFieldGO.GetComponent<BetField>();
-                betField.number = -1;
-                betField.betType = BetDef.BetType.Corner;
+                betField.Number = -1;
+                betField.BetType = BetDef.BetType.Corner;
 
-                betField.relatedFields = new List<BetField>();
-                betField.relatedFields.Add(GameObject.Find("Straight_" + number).GetComponent<BetField>());
-                betField.relatedFields.Add(GameObject.Find("Straight_" + (number + 1)).GetComponent<BetField>());
-                betField.relatedFields.Add(GameObject.Find("Straight_" + (number + 3)).GetComponent<BetField>());
-                betField.relatedFields.Add(GameObject.Find("Straight_" + (number + 4)).GetComponent<BetField>());
+                betField.RelatedFields = new List<BetField>();
+                betField.RelatedFields.Add(GameObject.Find("Straight_" + number).GetComponent<BetField>());
+                betField.RelatedFields.Add(GameObject.Find("Straight_" + (number + 1)).GetComponent<BetField>());
+                betField.RelatedFields.Add(GameObject.Find("Straight_" + (number + 3)).GetComponent<BetField>());
+                betField.RelatedFields.Add(GameObject.Find("Straight_" + (number + 4)).GetComponent<BetField>());
 
                 number++;
             }
