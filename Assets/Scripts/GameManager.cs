@@ -7,38 +7,25 @@ using static BetDef;
 
 public class GameManager : MonoBehaviour
 {
-    public static GameManager instance;
+    private static GameManager instance;
 
     private PlayerWallet playerWallet;
 
     private Roulette roulette;
     private int winningNumber;
 
-    private PlayerBalanceText playerBalanceText;
-    private PlayerWinPanel playerWinPanel;
-    private PlayerLosePanel playerLosePanel;
-    private WinningNumberText winningNumberText;
-    private PlayerBetText playerBetText;
-    private LastRewardText lastRewardText;
+    public static GameManager Instance { get => instance; private set => instance = value; }
 
     private void Awake()
     {
-        instance = this;
+        Instance = this;
         roulette = new Roulette();
     }
 
     void Start()
     {
         playerWallet = FindObjectOfType<PlayerWallet>();
-
-        winningNumberText = FindObjectOfType<WinningNumberText>();
-        playerBetText = FindObjectOfType<PlayerBetText>();
-        playerBalanceText = FindObjectOfType<PlayerBalanceText>();
-        playerWinPanel = FindObjectOfType<PlayerWinPanel>();
-        playerLosePanel = FindObjectOfType<PlayerLosePanel>();
-        lastRewardText = FindObjectOfType<LastRewardText>();
-
-        playerBalanceText.SetText(playerWallet.GetPlayerBalance().ToString());
+        HUD.Instance.UpdatePlayerBalanceText(playerWallet.PlayerBalance.ToString());
     }
 
     public void AddBet(BetField betField, Chip chip)
@@ -47,8 +34,8 @@ public class GameManager : MonoBehaviour
 
         roulette.AddPlayerBet(betField.BetType, chip.value, betField.GetRelatedNumbers());
         int currentRoundBet = roulette.GetCurrentRoundBet();
-        playerBetText.SetText(currentRoundBet.ToString());
-        playerBalanceText.SetText(playerWallet.PlayerBalance.ToString());
+        HUD.Instance.UpdateBetText(currentRoundBet.ToString());
+        HUD.Instance.UpdatePlayerBalanceText(playerWallet.PlayerBalance.ToString());
 
         TurnOffAllHiglights();
     }
@@ -61,28 +48,29 @@ public class GameManager : MonoBehaviour
 
     public void SpinButtonPressed()
     {
-        winningNumberText.SetText("...");
+        HUD.Instance.UpdateWinningNumberText("...");
         winningNumber = roulette.SpinWheel();
         Invoke("SpinFinished", 3f); //TODO: Use something better than Invoke
     }
 
     private void SpinFinished()
     {
-        winningNumberText.SetText(winningNumber.ToString());
-        List<Bet> winningBets = roulette.GetWinningBets(winningNumber);
+        HUD.Instance.UpdateWinningNumberText(winningNumber.ToString());
+
+        List <Bet> winningBets = roulette.GetWinningBets(winningNumber);
         int playerWinAmount = roulette.CalculatePlayerWinningAmount(winningBets);
-        lastRewardText.SetText(playerWinAmount.ToString());
+        HUD.Instance.UpdateLastRewardText(playerWinAmount.ToString());
+
 
         if (playerWinAmount > 0)
         {
-            playerWinPanel.SetText(playerWinAmount.ToString());
-            playerWinPanel.GetComponent<Animator>().SetTrigger("show");
+            HUD.Instance.ShowWinPanel(playerWinAmount.ToString());
             playerWallet.AddChips(playerWinAmount);
-            playerBalanceText.SetText(playerWallet.PlayerBalance.ToString());
+            HUD.Instance.UpdatePlayerBalanceText(playerWallet.PlayerBalance.ToString());
         }
         else
         {
-            playerLosePanel.GetComponent<Animator>().SetTrigger("show");
+            HUD.Instance.ShowLosePanel();
         }
         DestroyAllBets();
     }
@@ -90,7 +78,8 @@ public class GameManager : MonoBehaviour
     private void DestroyAllBets()
     {
         roulette.RemoveAllBets();
-        playerBetText.SetText("-");
+        HUD.Instance.UpdateBetText("-");
+
         foreach (Chip chip in FindObjectsOfType<Chip>())
             Destroy(chip.gameObject);
     }

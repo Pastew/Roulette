@@ -37,7 +37,7 @@ public class BetField : MonoBehaviour
 
         chip.transform.parent = transform;
         chip.transform.localPosition = Vector3.zero + chipStackOffset * chipsNumberAlreadyPlacedHere;
-        GameManager.instance.AddBet(this, chip);
+        GameManager.Instance.AddBet(this, chip);
     }
 
     // Highlights

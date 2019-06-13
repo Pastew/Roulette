@@ -21,9 +21,4 @@ public class PlayerWallet : MonoBehaviour
         else
             PlayerBalance -= (int)chips;
     }
-
-    public int GetPlayerBalance()
-    {
-        return 1000;
-    }
 }
