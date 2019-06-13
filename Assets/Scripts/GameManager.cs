@@ -62,7 +62,7 @@ public class GameManager : MonoBehaviour
     public void SpinButtonPressed()
     {
         winningNumberText.SetText("...");
-        winningNumber = roulette.SpinResult();
+        winningNumber = roulette.SpinWheel();
         Invoke("SpinFinished", 3f); //TODO: Use something better than Invoke
     }
 

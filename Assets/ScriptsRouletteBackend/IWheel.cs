@@ -2,12 +2,12 @@
 
 public interface IWheel
 {
-    int SpinResult();
+    int Spin();
 }
 
 public class SimpleRandomWheel : IWheel
 {
-    public int SpinResult()
+    public int Spin()
     {
         return new Random().Next(0, 36 + 1);
     }
@@ -22,7 +22,7 @@ public class FakeWheelReturningGivenNumber : IWheel
         this.alywasReturnedValue = alwaysReturnedValue;
     }
 
-    public int SpinResult()
+    public int Spin()
     {
         return alywasReturnedValue;
     }

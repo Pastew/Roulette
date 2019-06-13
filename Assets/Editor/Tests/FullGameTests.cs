@@ -34,7 +34,7 @@ namespace Tests
             betsHolder.AddPlayerBet(BetDef.BetType.Straight, chipsOnStraight, 2);
             
             // Spin and gather winning bets
-            int winningNumber = fakeWheelAlwaysReturningNumber2.SpinResult();
+            int winningNumber = fakeWheelAlwaysReturningNumber2.Spin();
             List<Bet> winningBets = betsHolder.GetWinningBets(winningNumber);
 
             // Calculate final win
@@ -61,7 +61,7 @@ namespace Tests
             betsHolder.AddPlayerBet(BetDef.BetType.FirstColumn, chipsOnLosingFirstColumn);
 
             // Spin and gather winning bets
-            int winningNumber = fakeWheelAlwaysReturningNumber2.SpinResult();
+            int winningNumber = fakeWheelAlwaysReturningNumber2.Spin();
             List<Bet> winningBets = betsHolder.GetWinningBets(winningNumber);
 
             // Calculate final win

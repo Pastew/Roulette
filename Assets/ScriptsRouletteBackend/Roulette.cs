@@ -22,9 +22,9 @@ public class Roulette
         betsHolder.AddPlayerBet(betType, chips, numbers);
     }
 
-    internal int SpinResult()
+    internal int SpinWheel()
     {
-        return wheel.SpinResult();
+        return wheel.Spin();
     }
 
     internal int CalculatePlayerWinningAmount(List<Bet> winningBets)
