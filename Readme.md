@@ -6,10 +6,10 @@
 1. Test
 
 # How I have dealt with specific problems along the way 
-1. Problem: How to test if score is calculated correctly?
+1. Problem: How to test if score is calculated correctly?  
 I didn't want to test and calculate it manually, so first thing I did was to create unit tests.
 
-1. Problem: A lot of bet fields
+1. Problem: A lot of bet fields  
 There are a lot of fields where player can place a chip, so I created small Unity Editor script to pre-generate game objects for me, it saved a lot of time.
 
 # List of features you would like to implement, if given more time
