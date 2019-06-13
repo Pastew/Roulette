@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class WinCalculator
+public static class WinCalculator
 {
-    public int CalculatePlayerWinningAmount(List<Bet> winningBets)
+    public static int CalculatePlayerWinningAmount(List<Bet> winningBets)
     {
         int finalAmount = 0;
 

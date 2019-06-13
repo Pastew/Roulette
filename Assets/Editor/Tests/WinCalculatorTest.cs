@@ -17,7 +17,7 @@ namespace Tests
         // =======
         private void PerformTest(int expectedReward, List<Bet> bets)
         {
-            int actualReward = new WinCalculator().CalculatePlayerWinningAmount(bets);
+            int actualReward = WinCalculator.CalculatePlayerWinningAmount(bets);
             Assert.AreEqual(expectedReward, actualReward);
         }
 

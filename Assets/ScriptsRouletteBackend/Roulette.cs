@@ -7,11 +7,9 @@ public class Roulette
 {
     private BetsHolder betsHolder;
     private IWheel wheel;
-    private WinCalculator winCalculator;
 
     public Roulette()
     {
-        winCalculator = new WinCalculator();
         betsHolder = new BetsHolder();
         wheel = new SimpleRandomWheel();
         //wheel = new FakeWheelReturningGivenNumber(2);
@@ -29,7 +27,7 @@ public class Roulette
 
     internal int CalculatePlayerWinningAmount(List<Bet> winningBets)
     {
-        return winCalculator.CalculatePlayerWinningAmount(winningBets);
+        return WinCalculator.CalculatePlayerWinningAmount(winningBets);
     }
 
     internal List<Bet> GetWinningBets(int winningNumber)

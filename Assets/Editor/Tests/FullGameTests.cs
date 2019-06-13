@@ -10,13 +10,11 @@ namespace Tests
     public class FullGameTests
     {
         BetsHolder betsHolder;
-        WinCalculator winCalculator;
         IWheel fakeWheelAlwaysReturningNumber2;
 
         [SetUp]
         public void TestSetup()
         {
-            winCalculator = new WinCalculator();
             betsHolder = new BetsHolder();
             fakeWheelAlwaysReturningNumber2 = new FakeWheelReturningGivenNumber(2);
         }
@@ -38,7 +36,7 @@ namespace Tests
             List<Bet> winningBets = betsHolder.GetWinningBets(winningNumber);
 
             // Calculate final win
-            int actualReward = winCalculator.CalculatePlayerWinningAmount(winningBets);
+            int actualReward = WinCalculator.CalculatePlayerWinningAmount(winningBets);
             Assert.AreEqual(expectedReward, actualReward);
         }
 
@@ -65,7 +63,7 @@ namespace Tests
             List<Bet> winningBets = betsHolder.GetWinningBets(winningNumber);
 
             // Calculate final win
-            int actualReward = winCalculator.CalculatePlayerWinningAmount(winningBets);
+            int actualReward = WinCalculator.CalculatePlayerWinningAmount(winningBets);
             Assert.AreEqual(expectedReward, actualReward);
         }
         
