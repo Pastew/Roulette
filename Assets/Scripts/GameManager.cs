@@ -8,13 +8,12 @@ using static BetDef;
 public class GameManager : MonoBehaviour
 {
     private static GameManager instance;
+    public static GameManager Instance { get => instance; private set => instance = value; }
 
     private PlayerWallet playerWallet;
-
     private Roulette roulette;
-    private int winningNumber;
 
-    public static GameManager Instance { get => instance; private set => instance = value; }
+    private int winningNumber;
 
     private void Awake()
     {
@@ -42,7 +41,7 @@ public class GameManager : MonoBehaviour
 
     private void TurnOffAllHiglights()
     {
-        foreach (BetField betField in FindObjectsOfType<BetField>())
+        foreach (BetField betField in FindObjectsOfType<BetField>()) // TODO: optimize, this can be predefined
             betField.TurnHighlight(false);
     }
 
@@ -57,10 +56,9 @@ public class GameManager : MonoBehaviour
     {
         HUD.Instance.UpdateWinningNumberText(winningNumber.ToString());
 
-        List <Bet> winningBets = roulette.GetWinningBets(winningNumber);
+        List<Bet> winningBets = roulette.GetWinningBets(winningNumber);
         int playerWinAmount = roulette.CalculatePlayerWinningAmount(winningBets);
         HUD.Instance.UpdateLastRewardText(playerWinAmount.ToString());
-
 
         if (playerWinAmount > 0)
         {

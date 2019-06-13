@@ -15,7 +15,7 @@ public class BetField : MonoBehaviour
     [SerializeField]
     private List<BetField> relatedFields;
 
-    private GameObject light;
+    private GameObject highlight;
 
     public BetDef.BetType BetType { get => betType; set => betType = value; }
     public int Number { get => number; set => number = value; }
@@ -23,7 +23,7 @@ public class BetField : MonoBehaviour
 
     private void Awake()
     {
-        light = transform.Find("Light").gameObject; // TODO: Optimize finding method.
+        highlight = transform.Find("Light").gameObject; // TODO: Optimize finding method.
     }
 
     public int[] GetRelatedNumbers()
@@ -51,6 +51,6 @@ public class BetField : MonoBehaviour
 
     public void TurnHighlight(bool turnedOn)
     {
-        light.gameObject.SetActive(turnedOn);
+        highlight.gameObject.SetActive(turnedOn);
     }
 }
